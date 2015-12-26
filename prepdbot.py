@@ -1,4 +1,4 @@
-#Reuters cutbot
+#cutbot
 
 import feedparser
 import time
@@ -14,19 +14,16 @@ print "Log into the Prepd extension on a chrome window and leave it open.\nThen 
 raw_input()
 
 #feed urls
-RSSFeeds = ["http://feeds.reuters.com/reuters/businessNews", "http://feeds.reuters.com/reuters/environment", "http://feeds.reuters.com/news/wealth", "http://feeds.reuters.com/Reuters/PoliticsNews", "http://feeds.reuters.com/reuters/scienceNews", "http://feeds.reuters.com/reuters/technologyNews"]
-
-#start by placing first link here (to compare when links overlap)
-FirstLinks = [None] * len(RSSFeeds)
+RSSFeeds = ["http://rss.cnn.com/rss/cnn_topstories.rss", "http://feeds.nytimes.com/nyt/rss/HomePage", "http://www.washingtonpost.com/rss", "http://hosted.ap.org/lineups/USHEADS-rss_2.0.xml?SITE=RANDOM&SECTION=HOME", "http://rssfeeds.usatoday.com/usatoday-NewsTopStories", "http://www.npr.org/rss/rss.php?id=1001" "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/americas/rss.xml", "http://hosted.ap.org/lineups/SCIENCEHEADS-rss_2.0.xml?SITE=OHLIM&SECTION=HOME", "http://feeds.sciencedaily.com/sciencedaily", "http://feeds.nature.com/nature/rss/current", "http://www.techlearning.com/RSS", "http://feeds.wired.com/wired/index", "http://feeds.nytimes.com/nyt/rss/Technology", "http://www.npr.org/rss/rss.php?id=1019", "http://feeds.feedburner.com/FrontlineEditorsNotes", "http://www.npr.org/rss/rss.php?id=1008", "http://www.salon.com/?source=rss&aim=/"]
 
 FeedLinks = []
 
 
 def wait(ATime):
     if ATime == "long":
-        time.sleep(8)
+        time.sleep(7.5)
     if ATime == "short":
-        time.sleep(0.5)
+        time.sleep(0.2)
 
 def cut(link):
     global PrepdButtonLocation
@@ -64,23 +61,15 @@ def cut(link):
 
 Popen(["chromium-browser", "--start-maximized"])
 print "done"
-
 while True:
-
     for i in xrange(0,len(RSSFeeds)):
         links = feedparser.parse(RSSFeeds[i])
 
-        #to see when feeds overlap
         for j in xrange(0,len(links["entries"])):
-            if links.entries[j]['link'] == FirstLinks[i]:
-                break
-            else:
-                FeedLinks.append(links.entries[j]['link'])
-                print links.entries[j]['link']
-                #run cutting function
-                cut(links.entries[j]['link'])
-        FirstLinks.append(links.entries[0]['link'])
-
+            FeedLinks.append(links.entries[j]['link'])
+            print links.entries[j]['link']
+            #run cutting function
+            cut(links.entries[j]['link'])
 
         print FeedLinks
 
