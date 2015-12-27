@@ -19,6 +19,7 @@ Prepdbot is a script that automatically cuts articles for [Prepd](https://prepd.
 * feedparser
 * pyautogui
 * chromium-browser
+* Prepd Article Catcher
 * (all subdependacies)
 
 ##Instructions
