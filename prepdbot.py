@@ -1,66 +1,96 @@
-#cutbot
+__author__ = "Isaac Lo"
+__copyright__ = "Copyright 2015"
 
 import feedparser
 import time
 import pyautogui
 from subprocess import Popen
 
-#mouse variables
+#variables
+UserName = "john"
+Password = "smith"
+FolderName = "Articles"
+WaitTime = 9
+ChromiumBinary = "chromium-browser"
+UserNameLocation = [403,192]
+PasswordLocation = [387,237]
 PrepdButtonLocation = [754,70]
 FolderSelectLocation = [412,260]
 CatchButtonLocation = [672,341]
-
-print "Log into the Prepd extension on a chrome window and leave it open.\nThen hit the return key."
-raw_input()
+#note: these coordinates given are for a 800x600 screen
 
 #feed urls
-RSSFeeds = ["http://rss.cnn.com/rss/cnn_topstories.rss", "http://feeds.nytimes.com/nyt/rss/HomePage", "http://www.washingtonpost.com/rss", "http://hosted.ap.org/lineups/USHEADS-rss_2.0.xml?SITE=RANDOM&SECTION=HOME", "http://rssfeeds.usatoday.com/usatoday-NewsTopStories", "http://www.npr.org/rss/rss.php?id=1001" "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/americas/rss.xml", "http://hosted.ap.org/lineups/SCIENCEHEADS-rss_2.0.xml?SITE=OHLIM&SECTION=HOME", "http://feeds.sciencedaily.com/sciencedaily", "http://feeds.nature.com/nature/rss/current", "http://www.techlearning.com/RSS", "http://feeds.wired.com/wired/index", "http://feeds.nytimes.com/nyt/rss/Technology", "http://www.npr.org/rss/rss.php?id=1019", "http://feeds.feedburner.com/FrontlineEditorsNotes", "http://www.npr.org/rss/rss.php?id=1008", "http://www.salon.com/?source=rss&aim=/"]
+RSSFeeds = ["feed1", "feed2", "feed3"]
 
 FeedLinks = []
 
-
-def wait(ATime):
-    if ATime == "long":
-        time.sleep(7.5)
-    if ATime == "short":
-        time.sleep(0.2)
+FirstBool = True
 
 def cut(link):
+    global UserName
+    global Password
+    global FolderName
+    global WaitTime
+    global ChromiumBinary
+    global UserNameLocation
+    global PasswordLocation
     global PrepdButtonLocation
     global FolderSelectLocation
     global CatchButtonLocation
+    global FirstBool
 
-    Popen(["chromium-browser", link])
+    Popen([ChromiumBinary, link])
     print "went to rss link"
-    wait("long")
+    time.sleep(WaitTime)
 
     pyautogui.moveTo(PrepdButtonLocation[0], PrepdButtonLocation[1])
     pyautogui.click()
     print "clicked on prepd button"
-    wait("long")
+    time.sleep(WaitTime)
+
+    if FirstBool == True:
+        #login
+        time.sleep(WaitTime)
+
+        pyautogui.moveTo(PasswordLocation[0], PasswordLocation[1])
+        pyautogui.click()
+        pyautogui.typewrite(Password, interval=0.05)
+        print "typed password"
+
+        pyautogui.moveTo(UserNameLocation[0], UserNameLocation[1])
+        pyautogui.click()
+        pyautogui.typewrite(UserName, interval=0.05)
+        print "typed username"
+
+        pyautogui.press('enter')
+        print "logged in"
+
+        time.sleep(WaitTime)
 
     pyautogui.moveTo(FolderSelectLocation[0], FolderSelectLocation[1])
     pyautogui.click()
     print "clicked on folder selection"
-    wait("short")
 
-    pyautogui.typewrite('Articles', interval=0.05)
+    pyautogui.typewrite(FolderName, interval=0.05)
     pyautogui.press('enter')
     print "typed into folder selection"
-    wait("short")
+
 
     pyautogui.moveTo(CatchButtonLocation[0], CatchButtonLocation[1])
     pyautogui.click()
-    wait("long")
+    time.sleep(WaitTime)
+    print "caught article"
 
     pyautogui.press("esc")
 
     pyautogui.hotkey('ctrl', 'w')
+    print "closed tab"
 
     #exit()
 
-Popen(["chromium-browser", "--start-maximized"])
+Popen([ChromiumBinary, "--start-maximized"])
 print "done"
+
 while True:
     for i in xrange(0,len(RSSFeeds)):
         links = feedparser.parse(RSSFeeds[i])
@@ -70,6 +100,7 @@ while True:
             print links.entries[j]['link']
             #run cutting function
             cut(links.entries[j]['link'])
+            FirstBool = False
 
         print FeedLinks
 
