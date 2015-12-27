@@ -1,5 +1,5 @@
 # prepdbot
-Prepdbot is a script that automatically cuts articles for (https://prepd.in "Prepd") from given RSS feeds.
+Prepdbot is a script that automatically cuts articles for [Prepd](https://prepd.in) from given RSS feeds.
 
 ##Configuration
 * UserName: your Prepd username
