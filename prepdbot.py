@@ -1,35 +1,41 @@
 __author__ = "Isaac Lo"
 __copyright__ = "Copyright 2015"
+#PrepdBot Standalone
 
-import feedparser
 import time
 import pyautogui
+import feedparser
 from subprocess import Popen
 
 #variables
 UserName = "john"
 Password = "smith"
-FolderName = "Articles"
 WaitTime = 9
 ChromiumBinary = "chromium-browser"
+
+#note: these coordinates given are for a 800x600 screen
 UserNameLocation = [403,192]
 PasswordLocation = [387,237]
 PrepdButtonLocation = [754,70]
 FolderSelectLocation = [412,260]
 CatchButtonLocation = [672,341]
-#note: these coordinates given are for a 800x600 screen
 
 #feed urls
-RSSFeeds = ["feed1", "feed2", "feed3"]
+RSSFeeds = [
+["http://feeds.reuters.com/reuters/businessNews", "Buisness"],
+["http://feeds.reuters.com/reuters/companyNews", "Companies"],
+["http://feeds.reuters.com/reuters/environment", "Environment"],
+["http://feeds.reuters.com/news/wealth", "Money"],
+["http://feeds.reuters.com/Reuters/PoliticsNews", "Politics"],
+["http://feeds.reuters.com/Reuters/domesticNews", "Domestic News"]
+]
 
-FeedLinks = []
 
 FirstBool = True
 
-def cut(link):
+def cut(link, FolderName):
     global UserName
     global Password
-    global FolderName
     global WaitTime
     global ChromiumBinary
     global UserNameLocation
@@ -38,6 +44,9 @@ def cut(link):
     global FolderSelectLocation
     global CatchButtonLocation
     global FirstBool
+
+    print "Link: " + link
+    print "Folder Name: " + FolderName + "\n"
 
     Popen([ChromiumBinary, link])
     print "went to rss link"
@@ -75,7 +84,6 @@ def cut(link):
     pyautogui.press('enter')
     print "typed into folder selection"
 
-
     pyautogui.moveTo(CatchButtonLocation[0], CatchButtonLocation[1])
     pyautogui.click()
     time.sleep(WaitTime)
@@ -84,25 +92,26 @@ def cut(link):
     pyautogui.press("esc")
 
     pyautogui.hotkey('ctrl', 'w')
-    print "closed tab"
-
-    #exit()
+    print "closed tab\n"
 
 Popen([ChromiumBinary, "--start-maximized"])
+time.sleep(WaitTime)
 print "done"
+
+Cuts = 0
 
 while True:
     for i in xrange(0,len(RSSFeeds)):
-        links = feedparser.parse(RSSFeeds[i])
+        links = feedparser.parse(RSSFeeds[i][0])
 
         for j in xrange(0,len(links["entries"])):
-            FeedLinks.append(links.entries[j]['link'])
-            print links.entries[j]['link']
-            #run cutting function
-            cut(links.entries[j]['link'])
+            TheLink = links.entries[j]['link']
+            FolderName = RSSFeeds[i][1]
+            print "Link: " + TheLink
+            print "Folder Name: " + FolderName
+            #increment number of articles cut
+            cut(TheLink, FolderName)
             FirstBool = False
 
-        print FeedLinks
-
-        #delete all the content of FeedLinks
-        del FeedLinks[:]
+            Cuts = Cuts + 1
+            print "Articles Cut: " + str(Cuts) + "\n"
