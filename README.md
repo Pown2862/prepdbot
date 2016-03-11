@@ -25,4 +25,4 @@ Prepdbot is a script that automatically cuts articles for [Prepd](https://prepd.
 ##Instructions
 1. Ensure that all open chromium windows are closed.
 2. Enable prepd in chromium incognito mode.
-2. Run the prepdbot script.
+3. Run the prepdbot script.
