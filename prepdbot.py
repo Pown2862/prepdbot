@@ -48,7 +48,7 @@ def cut(link, FolderName):
     print "Link: " + link
     print "Folder Name: " + FolderName + "\n"
 
-    Popen([ChromiumBinary, link])
+    Popen([ChromiumBinary, "--incognito", link])
     print "went to rss link"
     time.sleep(WaitTime)
 
@@ -94,7 +94,7 @@ def cut(link, FolderName):
     pyautogui.hotkey('ctrl', 'w')
     print "closed tab\n"
 
-Popen([ChromiumBinary, "--start-maximized"])
+Popen([ChromiumBinary, "--start-maximized", "--incognito"])
 time.sleep(WaitTime)
 print "done"
 
